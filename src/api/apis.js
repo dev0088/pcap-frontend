@@ -56,28 +56,14 @@ const fileQuery = function(path, method, data, token) {
       ...headers
     }
   })
-      // get data
-      .then(response => {
-        console.log('====== response: ', response);
-        return response.data;
-      })
-      // add url field
-      .then(res => {
-        console.log('====== res: ', res);
-        return res
-      });
-
-  // return await query(
-  //   path, 
-  //   {
-  //     method,
-  //     headers: {
-  //       "Content-Type": "multipart/form-data"
-  //     },
-  //     body: data
-  //   },
-  //   token
-  // );
+  // get data
+  .then(response => {
+    return response.data;
+  })
+  // add url field
+  .then(res => {
+    return res
+  });
 };
 
 const getLocalToken = function() {

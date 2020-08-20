@@ -1,5 +1,9 @@
 # gull-vue
 
+### Change config for backend address
+<p> Please change url of backend API in `restApiSettings` variable in `/src/data/cofnig.js` file.
+</p>
+
 ## Project setup
 
 ```

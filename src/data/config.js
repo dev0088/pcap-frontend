@@ -10,5 +10,5 @@ export const firebaseSettings = {
 
 // Config for REST API backend
 export const restApiSettings = {
-  baseURL: "http://192.168.0.123:8000/api/v1",
+  baseURL: "http://localhost:8000/api/v1",
 };
