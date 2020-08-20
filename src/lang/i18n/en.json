@@ -1,0 +1,10 @@
+{
+  "dashboard": "Dashboard",
+  "dashboardItems": {
+    "domains": "Domains",
+    "versionOne": "Version One",
+    "versionTwo": "Version Two",
+    "versionThree": "Version Three",
+    "versionFour": "Version Four"
+  }
+}
