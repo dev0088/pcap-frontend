@@ -22,21 +22,19 @@
       :rows="rows"
     >
       <div slot="table-actions" class="mb-3">
-        <!-- <b-button variant="primary" class="btn-rounded" @click="addDomain">
-          Add New Domain
-        </b-button> -->
-        <b-button v-b-modal.modal-1 block variant="primary mb-30" class="btn-rounded">
+        <b-button v-b-modal.modal-add block variant="primary mb-30" class="btn-rounded" @click="editDomain(-1)">
           + Add New Domain
         </b-button>
 
-          <b-modal id="modal-1" centered title="Add New Domain" hide-footer>
-            <b-form @submit.prevent="addDomain()">
+          <b-modal id="modal-add" centered title="Add New Domain" @ok="addDomain" @cancel="refresh">
+            <b-form id="form-add">
               <b-form-group id="input-group-1" label-for="input-1">
                 <b-form-input
                   id="input-1"
                   type="text"
                   v-model="domainForm.name"
                   placeholder="domain name...."
+                  required
                 ></b-form-input>
               </b-form-group>
               
@@ -48,13 +46,6 @@
                   rows="3"
                 ></b-form-textarea>
               </b-form-group>
-              
-              <b-row>
-                <b-col lg="12" xl="12" md="12" class="text-right">
-                  <b-button type="submit" variant="outline-primary" class="btn-mr2">Submit</b-button>
-                  <b-button type="reset" variant="outline-danger" class="btn-mr2">Reset</b-button>
-                </b-col>
-              </b-row>
             </b-form>
           </b-modal>
 
@@ -62,17 +53,38 @@
 
       <template slot="table-row" slot-scope="props">
         <span v-if="props.column.field == 'button'">
-          <a href="#" @click="editDomain">
+          <a href="#" v-b-modal.modal-edit block  @click="editDomain(props.row.id)">
             <span class="ul-btn__icon"><i class="i-Eraser-2 text-20 text-success mr-2"></i></span>
             {{ props.row.button }}
-          </a>
-          <a href="#" @click="deleteDomain">
+           </a>
+          <a href="#" @click="removeDomain(props.row.id)">
             <i class="i-Close-Window text-20 text-danger"></i>
             {{ props.row.button }}
           </a>
         </span>
       </template>
     </vue-good-table>
+    <b-modal id="modal-edit" centered title="Edit Domain" @ok="saveDomain" @cancel="refresh">
+      <b-form id="form-edit">
+        <b-form-group id="input-group-edit" label-for="input-2">
+          <b-form-input
+            id="input-edit"
+            type="text"
+            v-model="domainForm.name"
+            placeholder="domain name...."
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <b-form-textarea
+            id="textarea-edit"
+            v-model="domainForm.description"
+            placeholder="Description..."
+            rows="3"
+          ></b-form-textarea>
+        </b-form-group>
+      </b-form>
+    </b-modal>
 
     <b-row class="mt-4 mb-4">
       <b-col lg="6" xl="6" md="12">
@@ -93,7 +105,14 @@
 
 // import { echart1, echart2, echart3 } from "@/data/dashboard1";
 
-import { getDomains, downloadDomains, uploadDomains } from "@/api/apis";
+import {
+  apiGetDomains,
+  apiDownloadDomains,
+  apiUploadDomains,
+  apiAddDomain,
+  apiDeleteDomain,
+  apiUpdateDomain,
+} from "@/api/apis";
 
 export default {
   metaInfo: {
@@ -128,24 +147,27 @@ export default {
       domainForm: [
         {
           id: -1,
-          name: "",
-          description: "",
+          name: '',
+          description: '',
+          created_at: ''
         }
       ],
     };
-    this.refreshDomains();    
+    this.refresh();    
     return res;
   },
   methods: {
-    refreshDomains() {
-      getDomains()
+    refresh() {
+      apiGetDomains()
       .then(
         domains => {
           this.rows = [];
           domains.forEach(({ id, name, description, updated_at }, index) => {
             this.rows.push({
-              name: name,
-              description: description
+              id,
+              name,
+              description,
+              updated_at
             });
           });
         }
@@ -153,7 +175,7 @@ export default {
     },
     downloadCSV(event) {
       let fileName = null;
-      const result = downloadDomains()
+      const result = apiDownloadDomains()
         .then(response => {
           if (response.status === 200) {
             fileName = response.headers.get("Content-Disposition");
@@ -183,26 +205,68 @@ export default {
       formData.append('file', this.file);
       formData.append('fileName', this.file.name)
       const that = this;
-      uploadDomains(formData)
+      apiUploadDomains(formData)
       .then(function(){
-        console.log('SUCCESS!!');
-        that.refreshDomains();
+        that.refresh();
       })
       .catch(function(error){
-        console.log('FAILURE: ', error);
+        console.log('==== FAILURE: ', error);
       });
     },
     handleFileUpload() {
       this.file = this.$refs.file.files[0];
     },
     addDomain() {
-      console.log('==== Add domain: ', this.domainForm.name, this.domainForm.description);
+      const { name, description } = this.domainForm;
+      const that = this;
+      if (name) {
+        apiAddDomain({name, description})
+        .then(res => {
+          that.$bvModal.hide('modal-add');
+          that.refresh();
+        })
+        .catch(error => {
+          console.log('===== error: ', error);
+        });
+      }
     },
-    editDomain() {
-      console.log('==== Delete domain');
+    editDomain(id) {
+      if (id === -1) {
+        this.domainForm = [{
+          id: -1,
+          name: '',
+          description: '',
+          created_at: ''
+        }];
+      } else {
+        const data = this.rows.find( domain => domain.id === id);
+        this.domainForm = data;
+      }
     },
-    deleteDomain() {
-      console.log('==== Delete domain');
+    saveDomain() {
+      const that = this;
+      const { name, description } = this.domainForm;
+      apiUpdateDomain(
+        this.domainForm.id,
+        { name, description }
+      )
+      .then(res => {
+        that.$bvModal.hide('modal-edit');
+        that.refresh();
+      })
+      .catch(error => {
+        console.log('===== error: ', error);
+      });
+    },
+    removeDomain(id) {
+      const that = this;
+      apiDeleteDomain(id)
+      .then(res => {
+        that.refresh();
+      })
+      .catch(error => {
+        console.log('===== error: ', error);
+      });
     }
   },
 };
