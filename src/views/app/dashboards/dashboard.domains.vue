@@ -1,40 +1,90 @@
 <template>
   <!-- ============ Body content start ============= -->
   <div class="main-content">
-    <breadcumb :page="'Domains'" :folder="'Dashboard'" />
+    <breadcumb :page="'Vue Good Table'" :folder="'Datatables'" />
+    <!-- <div class="wrapper"> -->
+    <vue-good-table
+      :columns="columns"
+      :line-numbers="true"
+      :search-options="{
+        enabled: true,
+        placeholder: 'Search this table'
+      }"
+      :pagination-options="{
+        enabled: true,
+        mode: 'records'
+      }"
+      styleClass="tableOne vgt-table"
+      :selectOptions="{
+        enabled: false,
+        selectionInfoClass: 'table-alert__box'
+      }"
+      :rows="rows"
+    >
+      <div slot="table-actions" class="mb-3">
+        <!-- <b-button variant="primary" class="btn-rounded" @click="addDomain">
+          Add New Domain
+        </b-button> -->
+        <b-button v-b-modal.modal-1 block variant="primary mb-30" class="btn-rounded">
+          + Add New Domain
+        </b-button>
 
-    <div class="row">
-      
-      <div class="col-md-12">
-        <div class="card mb-30">
-          <div class="card-body p-0 ">
-            <div class="card-title p-3 mb-2">
-              <div class="row border-bottom">
-                <h5 class="col-md-6">Domains</h5>
-                <div slot="table-actions" class="col-md-6">
-                  <b-button variant="primary" class="float-right" @click="downloadCSV">
-                    Download
-                  </b-button>
-                </div>
-              </div>
-            </div>
-            
-            <vue-good-table
-              :columns="columns"
-              :line-numbers="false"
-              styleClass="order-table vgt-table"
-              :rows="rows"
-            >
-            </vue-good-table>
+          <b-modal id="modal-1" centered title="Add New Domain" hide-footer>
+            <b-form @submit.prevent="addDomain()">
+              <b-form-group id="input-group-1" label-for="input-1">
+                <b-form-input
+                  id="input-1"
+                  type="text"
+                  v-model="domainForm.name"
+                  placeholder="domain name...."
+                ></b-form-input>
+              </b-form-group>
+              
+              <b-form-group>
+                <b-form-textarea
+                  id="textarea"
+                  v-model="domainForm.description"
+                  placeholder="Description..."
+                  rows="3"
+                ></b-form-textarea>
+              </b-form-group>
+              
+              <b-row>
+                <b-col lg="12" xl="12" md="12" class="text-right">
+                  <b-button type="submit" variant="outline-primary" class="btn-mr2">Submit</b-button>
+                  <b-button type="reset" variant="outline-danger" class="btn-mr2">Reset</b-button>
+                </b-col>
+              </b-row>
+            </b-form>
+          </b-modal>
 
-            <div class="large-12 medium-12 small-12 cell">
-                <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-              <b-button variant="primary" class="float-right" v-on:click="uploadCSV()">Upload</b-button>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
+
+      <template slot="table-row" slot-scope="props">
+        <span v-if="props.column.field == 'button'">
+          <a href="#" @click="editDomain">
+            <span class="ul-btn__icon"><i class="i-Eraser-2 text-20 text-success mr-2"></i></span>
+            {{ props.row.button }}
+          </a>
+          <a href="#" @click="deleteDomain">
+            <i class="i-Close-Window text-20 text-danger"></i>
+            {{ props.row.button }}
+          </a>
+        </span>
+      </template>
+    </vue-good-table>
+
+    <b-row class="mt-4 mb-4">
+      <b-col lg="6" xl="6" md="12">
+        <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+        <b-button variant="primary" class="float-right" v-on:click="uploadCSV()">Upload CSV</b-button>
+      </b-col>
+      <b-col lg="6" xl="6" md="12" class="text-right">
+        <b-button variant="primary" class="" @click="downloadCSV">
+          Download CSV
+        </b-button>
+      </b-col>
+    </b-row>
   </div>
   <!-- ============ Body content End ============= -->
 </template>
@@ -53,12 +103,6 @@ export default {
     var res = {
       columns: [
         {
-          label: "No",
-          field: "id",
-          thClass: "text-left pl-3",
-          tdClass: "text-left pl-3"
-        },
-        {
           label: "Domain Name",
           field: "name",
           thClass: "text-left",
@@ -70,10 +114,24 @@ export default {
           html: true,
           thClass: "text-left",
           tdClass: "text-left"
+        },
+        {
+          label: "Actions",
+          field: "button",
+          html: true,
+          tdClass: "text-right",
+          thClass: "text-right"
         }
       ],
       rows: [],
-      file: ''
+      file: '',
+      domainForm: [
+        {
+          id: -1,
+          name: "",
+          description: "",
+        }
+      ],
     };
     this.refreshDomains();    
     return res;
@@ -86,7 +144,6 @@ export default {
           this.rows = [];
           domains.forEach(({ id, name, description, updated_at }, index) => {
             this.rows.push({
-              id: index + 1,
               name: name,
               description: description
             });
@@ -121,7 +178,7 @@ export default {
           console.log('error: ', err);
         });
     },
-    uploadCSV(){
+    uploadCSV() {
       let formData = new FormData();
       formData.append('file', this.file);
       formData.append('fileName', this.file.name)
@@ -135,8 +192,17 @@ export default {
         console.log('FAILURE: ', error);
       });
     },
-    handleFileUpload(){
+    handleFileUpload() {
       this.file = this.$refs.file.files[0];
+    },
+    addDomain() {
+      console.log('==== Add domain: ', this.domainForm.name, this.domainForm.description);
+    },
+    editDomain() {
+      console.log('==== Delete domain');
+    },
+    deleteDomain() {
+      console.log('==== Delete domain');
     }
   },
 };
