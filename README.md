@@ -1,7 +1,7 @@
 # gull-vue
 
 ### Change config for backend address
-<p> Please add <strong>.env</strong> file and set <strong>VUE_APP_API_BASE_URL</strong>
+<p> Please add <strong>.env</strong> file and set <strong>VUE_APP_API_BASE_URL</strong> environment value in the file.
 </p>
 For example:
 ```
