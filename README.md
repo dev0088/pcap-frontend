@@ -1,7 +1,7 @@
 # gull-vue
 
 ### Change config for backend address
-<p> Please add <strong style="color: #FF00FF;">.env</strong> file and set <strong style="color: #FF00FF;">VUE_APP_API_BASE_URL</strong> environment value in the file.
+<p> Please add <strong style="color: #FF0000;">.env</strong> file and set <strong style="color: #FF0000;">VUE_APP_API_BASE_URL</strong> environment value in the file.
 </p>
 For example:
 ```
