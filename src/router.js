@@ -14,7 +14,7 @@ const routes = [
     path: "/",
     component: () => import("./views/app"), //webpackChunkName app
     beforeEnter: authenticate,
-    redirect: "/app/dashboards/dashboard.domains",
+    redirect: "/app/dashboards/dashboard.v1",
 
     children: [
       {
@@ -22,9 +22,17 @@ const routes = [
         component: () => import("./views/app/dashboards"), //dashboard
         children: [
           {
+            path: "domains.create",
+            component: () => import("./views/app/dashboards/domains.create")
+          },        
+          {
             path: "dashboard.domains",
             component: () => import("./views/app/dashboards/dashboard.domains")
           },
+          {
+            path: "dashboard.domain-details",
+            component: () => import("./views/app/dashboards/dashboard.domain-details")
+          },                
           {
             path: "dashboard.v1",
             component: () => import("./views/app/dashboards/dashboard.v1")
@@ -43,6 +51,38 @@ const routes = [
           }
         ]
       },
+      {
+        path: "/app/projects",
+        component: () => import("./views/app/projects"),
+        children: [
+          {
+            path: "projects",
+            component: () => import("./views/app/projects/projects")
+          },    
+          {
+            path: "create",
+            component: () => import("./views/app/projects/create")
+          }, 
+          {
+            path: "templates",
+            component: () => import("./views/app/projects/templates")
+          }, 
+          {
+            path: "interpretation",
+            component: () => import("./views/app/projects/interpretation")
+          }          
+        ]
+      },
+      {
+        path: "/app/user",
+        component: () => import("./views/app/user"),
+        children: [
+          {
+            path: "profile",
+            component: () => import("./views/app/user/profile")
+          }        
+        ]
+      },      
 
       //ui-kits
       {

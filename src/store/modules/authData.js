@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import { loginWithAPI } from "@/api/apis";
+import {logoutWithAPI } from "@/api/apis"
 export default {
   state: {
     loggedInUser:
@@ -77,6 +78,43 @@ export default {
       //     // ...
       //   });
     },
+    logout({commit}, data) {
+      commit("clearError");
+      commit("setLoading", true);
+      logoutWithAPI(data)
+      .then(res => {
+        localStorage.setItem("userInfo", JSON.stringify(res));
+        commit("setUser", {user: res});
+      })
+      .catch(function(error) {
+        // Handle Errors here.
+        // var errorCode = error.code;
+        // var errorMessage = error.message;
+        // console.log(error);
+        localStorage.removeItem("userInfo");
+        commit("setError", error);
+        // ...
+      });
+      // firebase
+      //   .auth()
+      //   .signInWithEmailAndPassword(data.email, data.password)
+      //   .then(user => {
+      //     const newUser = {uid: user.user.uid};
+      //     localStorage.setItem("userInfo", JSON.stringify(newUser));
+      //     commit("setUser", {uid: user.user.uid});
+      //     console.log("user");
+      //   })
+      //   .catch(function(error) {
+      //     // Handle Errors here.
+      //     // var errorCode = error.code;
+      //     // var errorMessage = error.message;
+      //     // console.log(error);
+      //     localStorage.removeItem("userInfo");
+      //     commit("setError", error);
+      //     // ...
+      //   });
+    },
+
 
     signUserUp({commit}, data) {
       commit("setLoading", true);

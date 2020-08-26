@@ -1,14 +1,8 @@
 # gull-vue
 
 ### Change config for backend address
-<p> Please add <strong>.env</strong> file and set <strong>VUE_APP_API_BASE_URL</strong> environment value in the file.
+<p> Please change url of backend API in `restApiSettings` variable in `/src/data/cofnig.js` file.
 </p>
-
-For example:
-
-```
-VUE_APP_API_BASE_URL=http://localhost:8000/api/v1
-```
 
 ## Project setup
 

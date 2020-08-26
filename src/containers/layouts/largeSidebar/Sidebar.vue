@@ -15,19 +15,33 @@
         <ul class="navigation-left">
           <li
             @mouseenter="toggleSubMenu"
-            :class="{ active: selectedParentMenu == 'dashboards' }"
+            :class="{ active: selectedParentMenu == 'domains' }"
             class="nav-item"
-            data-item="dashboards"
+            data-item="domains"
             :data-submenu="true"
           >
             <a class="nav-item-hold" href="#">
-              <i class="nav-icon i-Bar-Chart"></i>
-              <span class="nav-text">{{ $t("dashboard") }}</span>
+              <i class="nav-icon i-Windows-2"></i>
+              <span class="nav-text">{{ $t("domains") }}</span>
             </a>
 
             <div class="triangle"></div>
           </li>
           <li
+            @mouseenter="toggleSubMenu"
+            :class="{ active: selectedParentMenu == 'projects' }"
+            class="nav-item"
+            data-item="projects"
+            :data-submenu="true"
+          >
+            <a class="nav-item-hold" href="#">
+              <i class="nav-icon i-Windows-2"></i>
+              <span class="nav-text">{{ $t("projects") }}</span>
+            </a>
+
+            <div class="triangle"></div>
+          </li>          
+          <!--<li
             @mouseenter="toggleSubMenu"
             class="nav-item"
             :class="{ active: selectedParentMenu == 'ui-kits' }"
@@ -160,7 +174,7 @@
               <span class="nav-text">Doc</span>
             </a>
             <div class="triangle"></div>
-          </li>
+          </li>-->
         </ul>
       </div>
     </vue-perfect-scrollbar>
@@ -174,26 +188,18 @@
         <!-- Submenu Dashboards -->
         <ul
           class="childNav d-none"
-          data-parent="dashboards"
-          :class="{ 'd-block': selectedParentMenu == 'dashboards' }"
-        >
+          data-parent="domains"
+          :class="{ 'd-block': selectedParentMenu == 'domains' }"
+        >               
           <li class="nav-item">
             <router-link tag="a" class to="/app/dashboards/dashboard.domains">
-              <i class="nav-icon i-Clock-3"></i>
+              <i class="nav-icon i-Windows-2"></i>
               <span class="item-name">{{
-                $t("dashboardItems.domains")
+                $t("all-domains")
               }}</span>
             </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link tag="a" class to="/app/dashboards/dashboard.v1">
-              <i class="nav-icon i-Clock-3"></i>
-              <span class="item-name">{{
-                $t("dashboardItems.versionOne")
-              }}</span>
-            </router-link>
-          </li>
-          <li class="nav-item">
+          </li>     
+          <!--<li class="nav-item">
             <router-link tag="a" class to="/app/dashboards/dashboard.v2">
               <i class="nav-icon i-Clock-4"></i>
               <span class="item-name">{{
@@ -216,8 +222,46 @@
                 $t("dashboardItems.versionFour")
               }}</span>
             </router-link>
-          </li>
+          </li>-->
         </ul>
+        <ul
+          class="childNav d-none"
+          data-parent="projects"
+          :class="{ 'd-block': selectedParentMenu == 'projects' }"
+        >
+          <li class="nav-item">
+            <router-link tag="a" class to="/app/projects/create">
+              <i class="nav-icon i-Add-File"></i>
+              <span class="item-name">{{
+                $t("create-project")
+              }}</span>
+            </router-link>
+          </li>     
+          <li class="nav-item">
+            <router-link tag="a" class to="/app/projects/templates">
+              <i class="nav-icon i-Windows-2"></i>
+              <span class="item-name">{{
+                $t("templates")
+              }}</span>
+            </router-link>
+          </li>  
+          <li class="nav-item">
+            <router-link tag="a" class to="/app/projects/interpretation">
+              <i class="nav-icon i-Windows-2"></i>
+              <span class="item-name">{{
+                $t("interpretation")
+              }}</span>
+            </router-link>
+          </li>                              
+          <li class="nav-item">
+            <router-link tag="a" class to="/app/projects/projects">
+              <i class="nav-icon i-Windows-2"></i>
+              <span class="item-name">{{
+                $t("all-projects")
+              }}</span>
+            </router-link>
+          </li>        
+        </ul>        
         <ul
           class="childNav d-none"
           data-parent="forms"

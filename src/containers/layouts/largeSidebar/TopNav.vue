@@ -11,7 +11,7 @@
     </div>
 
     <div class="d-flex align-items-center">
-      <!-- Mega menu -->
+       <!--Mega menu 
       <div
         :class="{ show: isMegaMenuOpen }"
         class="dropdown mega-menu d-none d-md-block"
@@ -114,7 +114,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
       <!-- / Mega menu -->
       <div class="search-bar" @click="toggleSearch">
         <input type="text" placeholder="Search" />
@@ -281,7 +281,9 @@
             <div class="dropdown-header">
               <i class="i-Lock-User mr-1"></i> Timothy Carlson
             </div>
-            <a class="dropdown-item">Account settings</a>
+            <router-link tag="a" class="dropdown-item" to="/app/user/profile">
+              Account Settings
+            </router-link>            
             <a class="dropdown-item">Billing history</a>
             <a class="dropdown-item" href="#" @click.prevent="logoutUser"
               >Sign out</a

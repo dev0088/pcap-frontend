@@ -7,22 +7,8 @@ const getUrl = function(path) {
   return url;
 };
 
-const getLocalToken = function() {
-  return localStorage.getItem("userInfo") != null
-  ? JSON.parse(localStorage.getItem("userInfo"))
-  : null;
-} 
-
-const query = async function(path, options = {}) {
-  if (!options.headers) {
-    options.headers = {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    };
-  }
+const query = async function(path, options = {}, token) {
   options.headers = options.headers || {};
-  const userInfo = getLocalToken();
-  const token = (userInfo && userInfo.token);
   if (token) {
     options.headers["Authorization"] = `Bearer ${token}`;
   }
@@ -44,7 +30,7 @@ const query = async function(path, options = {}) {
   }
 };
 
-const jsonQuery = async function(path, method, data) {
+const jsonQuery = async function(path, method, data, token) {
   return await query(
     path, 
     {
@@ -54,13 +40,13 @@ const jsonQuery = async function(path, method, data) {
         "Accept": "application/json"
       },
       body: JSON.stringify(data)
-    }
+    },
+    token
   );
 };
 
-const fileQuery = function(path, method, data) {
+const fileQuery = function(path, method, data, token) {
   var headers = [];
-  const token = (userInfo && userInfo.token);
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
@@ -80,15 +66,26 @@ const fileQuery = function(path, method, data) {
   });
 };
 
+const getLocalToken = function() {
+  return localStorage.getItem("userInfo") != null
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : null;
+} 
+
 export async function loginWithAPI(data) {
   return await jsonQuery(`/auth/login/`, "POST", data);
 }
 
-export async function apiGetDomains() {
-  return await query("/domain/all/", {method: 'GET'});
+export async function logoutWithAPI(data) {
+  return await jsonQuery(`/auth/loginout/`, "POST", data);
+}
+export async function getDomains(params) {
+  const userInfo = getLocalToken();
+  return await query("/domain/all/", params, (userInfo && userInfo.token));
 }
 
-export async function apiDownloadDomains() {
+export async function downloadDomains() {
+  const userInfo = getLocalToken();
   return await query(
     "/domain/export-csv/",
     {
@@ -98,26 +95,31 @@ export async function apiDownloadDomains() {
         "Accept": "application/json"
       },
       responseType: 'blob'
-    }
-  );
+    },
+    (userInfo && userInfo.token));
 }
 
-export async function apiUploadDomains(formData) {
-  return await fileQuery("/domain/import-csv/", 'POST', formData);
+export async function uploadDomains(formData) {
+  const userInfo = getLocalToken();
+  return await fileQuery("/domain/import-csv/", 'POST', formData, (userInfo && userInfo.token));
 }
 
-export async function apiGetDomainById(id) {
-  return await query(`/domain/${id}/`);
+export function getDomainById(id, token) {
+  const userInfo = getLocalToken();
+  return query(`/domain/${id}/`, token);
 }
 
 export async function apiAddDomain(data) {
-  return await jsonQuery(`/domain/create/`, 'POST', data);
+  const userInfo = getLocalToken();
+  return await jsonQuery(`/domain/create/`, 'POST', data, (userInfo && userInfo.token));
 }
 
 export async function apiDeleteDomain(id) {
-  return await query(`/domain/${id}/`, {method: 'DELETE'});
+  const userInfo = getLocalToken();
+  return await query(`/domain/${id}/`, {method: 'DELETE'}, (userInfo && userInfo.token));
 }
 
 export async function apiUpdateDomain(id, data) {
-  return await jsonQuery(`/domain/${id}/`, 'PUT', data);
+  const userInfo = getLocalToken();
+  return await jsonQuery(`/domain/${id}/`, 'PUT', data, (userInfo && userInfo.token));
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="customizer" :class="{ open: isOpen }">
+    <!--<div class="customizer" :class="{ open: isOpen }">
       <div class="handle" @click="isOpen = !isOpen">
         <i class="i-Gear spin"></i>
       </div>
@@ -18,7 +18,7 @@
 
           <div class="card-body">
             <div class="layouts">
-              <!---->
+              
               <div
                 class="layout-box"
                 @click="changeThemeLayout('compact-sidebar')"
@@ -256,7 +256,7 @@
           </div>
         </div>
       </vue-perfect-scrollbar>
-    </div>
+    </div>-->
   </div>
 </template>
 

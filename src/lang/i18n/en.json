@@ -6,5 +6,14 @@
     "versionTwo": "Version Two",
     "versionThree": "Version Three",
     "versionFour": "Version Four"
-  }
+  },
+  "domains": "Domains",
+  "all-domains": "All Domains",
+  "create-domain": "Create Domain",
+  "domain-details": "Domain Details",
+  "projects": "Projects",
+  "all-projects": "All Projects",
+  "create-project": "Create Project",
+  "templates": "Templates",
+  "interpretation": "Interpretation"
 }

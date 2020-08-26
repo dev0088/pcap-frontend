@@ -1,8 +1,7 @@
 <template>
   <!-- ============ Body content start ============= -->
   <div class="main-content">
-    <breadcumb :page="'Vue Good Table'" :folder="'Datatables'" />
-    <!-- <div class="wrapper"> -->
+    <breadcumb :page="'Domains'" :folder="'Dashboard'" />
     <vue-good-table
       :columns="columns"
       :line-numbers="true"
@@ -63,6 +62,7 @@
         </span>
       </template>
     </vue-good-table>
+
     <b-modal id="modal-edit" centered title="Edit Domain" @ok="saveDomain" @cancel="refresh">
       <b-form id="form-edit">
         <b-form-group id="input-group-edit" label-for="input-2">
@@ -83,19 +83,24 @@
           ></b-form-textarea>
         </b-form-group>
       </b-form>
-    </b-modal>
+    </b-modal>    
+    </b-card>
 
-    <b-row class="mt-4 mb-4">
-      <b-col lg="6" xl="6" md="12">
-        <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-        <b-button variant="primary" class="float-right" v-on:click="uploadCSV()">Upload CSV</b-button>
-      </b-col>
-      <b-col lg="6" xl="6" md="12" class="text-right">
-        <b-button variant="primary" class="" @click="downloadCSV">
-          Download CSV
-        </b-button>
-      </b-col>
-    </b-row>
+    <div class="row mb-30">
+    
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+              <h4 class="heading">CSV Upload</h4>
+              <div class="table-bottom large-12 medium-12 small-12 cell">
+                <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+                <b-button variant="primary" class="float-right" v-on:click="uploadCSV()">Upload</b-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- ============ Body content End ============= -->
 </template>
@@ -105,9 +110,9 @@
 // import { echart1, echart2, echart3 } from "@/data/dashboard1";
 
 import {
-  apiGetDomains,
-  apiDownloadDomains,
-  apiUploadDomains,
+  getDomains, 
+  downloadDomains, 
+  uploadDomains,
   apiAddDomain,
   apiDeleteDomain,
   apiUpdateDomain,
@@ -150,23 +155,22 @@ export default {
           description: '',
           created_at: ''
         }
-      ],
+      ],      
     };
-    this.refresh();    
+    this.refreshDomains();    
     return res;
   },
   methods: {
-    refresh() {
-      apiGetDomains()
+    refreshDomains() {
+      getDomains()
       .then(
         domains => {
           this.rows = [];
           domains.forEach(({ id, name, description, updated_at }, index) => {
             this.rows.push({
-              id,
-              name,
-              description,
-              updated_at
+              id: index + 1,
+              name: name,
+              description: description
             });
           });
         }
@@ -174,7 +178,7 @@ export default {
     },
     downloadCSV(event) {
       let fileName = null;
-      const result = apiDownloadDomains()
+      const result = downloadDomains()
         .then(response => {
           if (response.status === 200) {
             fileName = response.headers.get("Content-Disposition");
@@ -199,20 +203,21 @@ export default {
           console.log('error: ', err);
         });
     },
-    uploadCSV() {
+    uploadCSV(){
       let formData = new FormData();
       formData.append('file', this.file);
       formData.append('fileName', this.file.name)
       const that = this;
-      apiUploadDomains(formData)
+      uploadDomains(formData)
       .then(function(){
-        that.refresh();
+        console.log('SUCCESS!!');
+        that.refreshDomains();
       })
       .catch(function(error){
-        console.log('==== FAILURE: ', error);
+        console.log('FAILURE: ', error);
       });
     },
-    handleFileUpload() {
+    handleFileUpload(){
       this.file = this.$refs.file.files[0];
     },
     addDomain() {
@@ -266,7 +271,7 @@ export default {
       .catch(error => {
         console.log('===== error: ', error);
       });
-    }
+    }    
   },
 };
 </script>
@@ -274,5 +279,12 @@ export default {
 .echarts {
   width: 100%;
   height: 100%;
+}
+.table-head {
+  align-items: center;
+  padding-bottom: 10px;
+}
+.table-bottom {
+  padding-top: 20px;
 }
 </style>

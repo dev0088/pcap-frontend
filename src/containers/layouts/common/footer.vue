@@ -1,6 +1,6 @@
  <template>
   <div class="footer_wrap">
-    <!-- Footer Start -->
+    <!-- Footer Start 
     <div class="flex-grow-1"></div>
     <div class="app-footer">
       <div class="row">
@@ -34,7 +34,7 @@
           >
         </div>
       </div>
-      <!-- fotter end -->
+       fotter end -->
     </div>
   </div>
 </template> 

@@ -41,6 +41,7 @@
     "vue-meta": "^2.4.0",
     "vue-perfect-scrollbar": "^0.2.1",
     "vue-router": "^3.3.4",
+    "vue-server-renderer": "^2.6.12",
     "vue-simple-calendar": "^4.4.0",
     "vue-slider-component": "^3.2.2",
     "vue-star-rating": "^1.6.1",
@@ -48,6 +49,7 @@
     "vue-the-mask": "^0.11.1",
     "vue-tour": "^1.5.0",
     "vue2-daterange-picker": "^0.5.1",
+    "vue2-dropzone": "^3.6.0",
     "vue2-editor": "^2.10.2",
     "vuedraggable": "^2.24.0",
     "vuejs-smart-table": "0.0.5",
@@ -67,7 +69,7 @@
     "node-sass": "^4.14.1",
     "sass-loader": "^9.0.2",
     "vue-loader": "^15.9.3",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.12"
   },
   "eslintConfig": {
     "root": true,
