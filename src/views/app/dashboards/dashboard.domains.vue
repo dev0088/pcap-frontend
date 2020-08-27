@@ -83,19 +83,17 @@
           ></b-form-textarea>
         </b-form-group>
       </b-form>
-    </b-modal>    
-    </b-card>
+    </b-modal>
 
     <div class="row mb-30">
     
       <div class="col-md-12">
         <div class="card">
           <div class="card-body">
-              <h4 class="heading">CSV Upload</h4>
-              <div class="table-bottom large-12 medium-12 small-12 cell">
-                <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-                <b-button variant="primary" class="float-right" v-on:click="uploadCSV()">Upload</b-button>
-              </div>
+            <h4 class="heading">CSV Upload</h4>
+            <div class="table-bottom large-12 medium-12 small-12 cell">
+              <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+              <b-button variant="primary" class="float-right" v-on:click="uploadCSV()">Upload</b-button>
             </div>
           </div>
         </div>
@@ -110,9 +108,9 @@
 // import { echart1, echart2, echart3 } from "@/data/dashboard1";
 
 import {
-  getDomains, 
-  downloadDomains, 
-  uploadDomains,
+  apiGetDomains, 
+  apiDownloadDomains, 
+  apiUploadDomains,
   apiAddDomain,
   apiDeleteDomain,
   apiUpdateDomain,
@@ -157,20 +155,21 @@ export default {
         }
       ],      
     };
-    this.refreshDomains();    
+    this.refresh();    
     return res;
   },
   methods: {
-    refreshDomains() {
-      getDomains()
+    refresh() {
+      apiGetDomains()
       .then(
         domains => {
           this.rows = [];
           domains.forEach(({ id, name, description, updated_at }, index) => {
             this.rows.push({
-              id: index + 1,
-              name: name,
-              description: description
+              id,
+              name,
+              description,
+              updated_at
             });
           });
         }
@@ -178,7 +177,7 @@ export default {
     },
     downloadCSV(event) {
       let fileName = null;
-      const result = downloadDomains()
+      const result = apiDownloadDomains()
         .then(response => {
           if (response.status === 200) {
             fileName = response.headers.get("Content-Disposition");
@@ -208,16 +207,15 @@ export default {
       formData.append('file', this.file);
       formData.append('fileName', this.file.name)
       const that = this;
-      uploadDomains(formData)
-      .then(function(){
-        console.log('SUCCESS!!');
-        that.refreshDomains();
+      apiUploadDomains(formData)
+      .then(function() {
+        that.refresh();
       })
-      .catch(function(error){
+      .catch(function(error) {
         console.log('FAILURE: ', error);
       });
     },
-    handleFileUpload(){
+    handleFileUpload() {
       this.file = this.$refs.file.files[0];
     },
     addDomain() {

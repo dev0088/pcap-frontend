@@ -34,8 +34,9 @@
           >
         </div>
       </div>
-       fotter end -->
+       fotter end 
     </div>
+    -->
   </div>
 </template> 
 <script>

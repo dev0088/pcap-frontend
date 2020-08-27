@@ -599,7 +599,7 @@ export default {
 }
 .steps .step-content {
   margin: 2rem 0;
-},
+}
 .dropzone {
   line-height: 150px;
 }
