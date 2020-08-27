@@ -279,7 +279,8 @@
 
           <div class="dropdown-menu-right" aria-labelledby="userDropdown">
             <div class="dropdown-header">
-              <i class="i-Lock-User mr-1"></i> Timothy Carlson
+              <i class="i-Lock-User mr-1"></i>
+              {{ this.displayName }}
             </div>
             <router-link tag="a" class="dropdown-item" to="/app/user/profile">
               Account Settings
@@ -307,6 +308,7 @@ import searchComponent from "../common/search";
 import { isMobile } from "mobile-device-detect";
 import { mapGetters, mapActions } from "vuex";
 import { mixin as clickaway } from "vue-clickaway";
+import { getUserInfoFromLocal } from "@/api/users";
 
 export default {
   mixins: [clickaway],
@@ -316,13 +318,21 @@ export default {
   },
 
   data() {
+    const userInfo = getUserInfoFromLocal();
+    console.log('===== userInfo: ', getUserInfoFromLocal());
+    var displayName = '';
+    if (userInfo)
+      displayName = ((userInfo.first_name || userInfo.last_name) ? `${userInfo.first_name} ${userInfo.last_name}` : userInfo.username);
+      
     return {
       isDisplay: true,
 
       isStyle: true,
       isSearchOpen: false,
       isMouseOnMegaMenu: true,
-      isMegaMenuOpen: false
+      isMegaMenuOpen: false,
+      userInfo,
+      displayName
     };
   },
   mounted() {

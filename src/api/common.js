@@ -2,7 +2,7 @@ import { getFetch } from "@/api/fetch";
 import { restApiSettings } from "@/data/config";
 import * as axios from 'axios';
 
-const getLocalToken = function() {
+export const getLocalToken = () => {
   return localStorage.getItem("userInfo") != null
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;

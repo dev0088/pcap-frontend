@@ -20,6 +20,7 @@
               <b-form-input
                 type="text"
                 required
+                v-model="userForm.first_name"
               ></b-form-input>
             </b-form-group>
             <b-form-group
@@ -29,6 +30,7 @@
               <b-form-input
                 type="text"
                 required
+                v-model="userForm.last_name"
               ></b-form-input>
             </b-form-group>
           </b-row> 
@@ -40,10 +42,11 @@
               <b-form-input
                 type="text"
                 required
+                v-model="userForm.email"
               ></b-form-input>
             </b-form-group>
           </b-row>     
-          <b-button variant="primary ripple m-1">Update Profile</b-button>            
+          <b-button variant="primary ripple m-1" v-on:click="saveProfile()">Update Profile</b-button>            
         </b-card>
       </b-col>
       <b-col>
@@ -87,10 +90,51 @@
 </template>
 
 <script>
+import { getUserInfoFromLocal, apiUserById, apiUpdateUser } from "@/api/users";
+
 export default {
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used
     title: "Account Details"
+  },
+  data() {
+    const localUserInfo = getUserInfoFromLocal();
+    const res = {
+      userInfo: localUserInfo,
+      userForm: [{
+        ...localUserInfo
+      }]
+    };
+    this.refresh();
+    return res;
+  },
+  methods: {
+    refresh() {
+      const localUserInfo = getUserInfoFromLocal();
+      apiUserById(localUserInfo.id)
+      .then(
+        userInfo => {
+          this.userInfo = userInfo;
+          this.userForm = userInfo;
+        }
+      );
+    },
+    saveProfile() {
+      const that = this;
+      const { username, first_name, last_name, email } = this.userForm;
+      console.log('===== userForm: ', this.userForm, this.userInfo);
+      apiUpdateUser(
+        this.userForm.id,
+        { username, first_name, last_name, email }
+      )
+      .then(res => {
+        that.$bvModal.hide('modal-edit');
+        that.refresh();
+      })
+      .catch(error => {
+        console.log('===== error: ', error);
+      });
+    },
   }
 };
 </script>
