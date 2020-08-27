@@ -2,12 +2,18 @@ import { getFetch } from "@/api/fetch";
 import { restApiSettings } from "@/data/config";
 import * as axios from 'axios';
 
+export const getLocalToken = () => {
+  return localStorage.getItem("userInfo") != null
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : null;
+};
+
 const getUrl = function(path) {
   const url = `${restApiSettings.baseURL}${path}`;
   return url;
 };
 
-const query = async function(path, options = {}) {	
+export const query = async function(path, options = {}) {	
   if (!options.headers) {	
     options.headers = {	
       "Content-Type": "application/json",	
@@ -38,7 +44,7 @@ const query = async function(path, options = {}) {
   }
 };
 
-const jsonQuery = async function(path, method, data) {
+export const jsonQuery = async function(path, method, data) {
   return await query(
     path, 
     {
@@ -52,8 +58,9 @@ const jsonQuery = async function(path, method, data) {
   );
 };
 
-const fileQuery = function(path, method, data) {
+export const fileQuery = function(path, method, data) {
   var headers = [];
+  const userInfo = getLocalToken();
   const token = (userInfo && userInfo.token);
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
@@ -74,54 +81,4 @@ const fileQuery = function(path, method, data) {
   });
 };
 
-const getLocalToken = function() {
-  return localStorage.getItem("userInfo") != null
-  ? JSON.parse(localStorage.getItem("userInfo"))
-  : null;
-} 
 
-export async function loginWithAPI(data) {
-  return await jsonQuery(`/auth/login/`, "POST", data);
-}
-
-export async function logoutWithAPI(data) {
-  return await jsonQuery(`/auth/loginout/`, "POST", data);
-}
-export async function apiGetDomains() {
-  const userInfo = getLocalToken();
-  return await query("/domain/all/", {method: 'GET'});
-}
-
-export async function apiDownloadDomains() {
-  return await query(
-    "/domain/export-csv/",
-    {
-      method: 'GET',
-      headers: {
-        "Content-Type": "blob",
-        "Accept": "application/json"
-      },
-      responseType: 'blob'
-    }
-  );
-}
-
-export async function apiUploadDomains(formData) {
-  return await fileQuery("/domain/import-csv/", 'POST', formData);
-}
-
-export async function apiGetDomainById(id, token) {
-  return await query(`/domain/${id}/`);
-}
-
-export async function apiAddDomain(data) {
-  return await jsonQuery(`/domain/create/`, 'POST', data);
-}
-
-export async function apiDeleteDomain(id) {
-  return await query(`/domain/${id}/`, {method: 'DELETE'});
-}
-
-export async function apiUpdateDomain(id, data) {
-  return await jsonQuery(`/domain/${id}/`, 'PUT', data);
-}

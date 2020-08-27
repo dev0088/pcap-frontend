@@ -24,7 +24,7 @@ const routes = [
           {
             path: "domains.create",
             component: () => import("./views/app/dashboards/domains.create")
-          },        
+          },
           {
             path: "dashboard.domains",
             component: () => import("./views/app/dashboards/dashboard.domains")
@@ -32,7 +32,15 @@ const routes = [
           {
             path: "dashboard.domain-details",
             component: () => import("./views/app/dashboards/dashboard.domain-details")
-          },                
+          },
+          {
+            path: "dashboard.http-header-descriptions",
+            component: () => import("./views/app/dashboards/dashboard.http-header-descriptions")
+          },
+          {
+            path: "dashboard.http-header-value-descriptions",
+            component: () => import("./views/app/dashboards/dashboard.http-header-value-descriptions")
+          },
           {
             path: "dashboard.v1",
             component: () => import("./views/app/dashboards/dashboard.v1")

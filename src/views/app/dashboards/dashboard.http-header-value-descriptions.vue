@@ -1,7 +1,7 @@
 <template>
   <!-- ============ Body content start ============= -->
   <div class="main-content">
-    <breadcumb :page="'Domains'" :folder="'Dashboard'" />
+    <breadcumb :page="'HTTP Header Value Descriptions'" :folder="'Dashboard'" />
     <vue-good-table
       :columns="columns"
       :line-numbers="true"
@@ -21,18 +21,28 @@
       :rows="rows"
     >
       <div slot="table-actions" class="mb-3">
-        <b-button v-b-modal.modal-add block variant="primary mb-30" class="btn-rounded" @click="editDomain(-1)">
-          + Add New Domain
+        <b-button v-b-modal.modal-add block variant="primary mb-30" class="btn-rounded" @click="editHeader(-1)">
+          + Add New HTTP Header Value Description
         </b-button>
 
-          <b-modal id="modal-add" centered title="Add New Domain" @ok="addDomain" @cancel="refresh">
+          <b-modal id="modal-add" centered title="Add New HTTP Header Value Description" @ok="addHeader" @cancel="refresh">
             <b-form id="form-add">
               <b-form-group id="input-group-1" label-for="input-1">
                 <b-form-input
                   id="input-1"
                   type="text"
-                  v-model="domainForm.name"
-                  placeholder="domain name...."
+                  v-model="headerValueDescriptionForm.name"
+                  placeholder="header name..."
+                  required
+                ></b-form-input>
+              </b-form-group>
+
+              <b-form-group id="input-group-1" label-for="input-1">
+                <b-form-input
+                  id="input-1"
+                  type="text"
+                  v-model="headerValueDescriptionForm.value"
+                  placeholder="header value..."
                   required
                 ></b-form-input>
               </b-form-group>
@@ -40,8 +50,8 @@
               <b-form-group>
                 <b-form-textarea
                   id="textarea"
-                  v-model="domainForm.description"
-                  placeholder="Description..."
+                  v-model="headerValueDescriptionForm.description"
+                  placeholder="description..."
                   rows="3"
                 ></b-form-textarea>
               </b-form-group>
@@ -51,11 +61,11 @@
 
       <template slot="table-row" slot-scope="props">
         <span v-if="props.column.field == 'button'">
-          <a href="#" v-b-modal.modal-edit block  @click="editDomain(props.row.id)">
+          <a href="#" v-b-modal.modal-edit block  @click="editHeader(props.row.id)">
             <span class="ul-btn__icon"><i class="i-Eraser-2 text-20 text-success mr-2"></i></span>
             {{ props.row.button }}
            </a>
-          <a href="#" @click="removeDomain(props.row.id)">
+          <a href="#" @click="removeHeader(props.row.id)">
             <i class="i-Close-Window text-20 text-danger"></i>
             {{ props.row.button }}
           </a>
@@ -63,22 +73,31 @@
       </template>
     </vue-good-table>
 
-    <b-modal id="modal-edit" centered title="Edit Domain" @ok="saveDomain" @cancel="refresh">
+    <b-modal id="modal-edit" centered title="Edit HTTP Header Value Description" @ok="saveHeader" @cancel="refresh">
       <b-form id="form-edit">
         <b-form-group id="input-group-edit" label-for="input-2">
           <b-form-input
             id="input-edit"
             type="text"
-            v-model="domainForm.name"
-            placeholder="domain name...."
+            v-model="headerValueDescriptionForm.name"
+            placeholder="header name..."
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group id="input-group-edit" label-for="input-2">
+          <b-form-input
+            id="input-edit"
+            type="text"
+            v-model="headerValueDescriptionForm.value"
+            placeholder="header value..."
             required
           ></b-form-input>
         </b-form-group>
         <b-form-group>
           <b-form-textarea
             id="textarea-edit"
-            v-model="domainForm.description"
-            placeholder="Description..."
+            v-model="headerValueDescriptionForm.description"
+            placeholder="description..."
             rows="3"
           ></b-form-textarea>
         </b-form-group>
@@ -112,24 +131,31 @@
 // import { echart1, echart2, echart3 } from "@/data/dashboard1";
 
 import {
-  apiGetDomains, 
-  apiDownloadDomains, 
-  apiUploadDomains,
-  apiAddDomain,
-  apiDeleteDomain,
-  apiUpdateDomain,
-} from "@/api/domains";
+  apiGetHttpHeaderValueDescriptions, 
+  apiDownloadHttpHeaderValueDescriptions, 
+  apiUploadHttpHeaderValueDescriptions,
+  apiAddHttpHeaderValueDescription,
+  apiDeleteHttpHeaderValueDescription,
+  apiUpdateHttpHeaderValueDescription,
+} from "@/api/http-header-value-descriptions";
 
 export default {
   metaInfo: {
-    title: "Dashboard domains"
+    title: "Dashboard HTTP Header Value Descriptions"
   },
   data() {
     var res = {
       columns: [
         {
-          label: "Domain Name",
+          label: "Header Name",
           field: "name",
+          thClass: "text-left",
+          tdClass: "text-left"
+        },
+        {
+          label: "Value",
+          field: "value",
+          html: true,
           thClass: "text-left",
           tdClass: "text-left"
         },
@@ -150,10 +176,11 @@ export default {
       ],
       rows: [],
       file: '',
-      domainForm: [
+      headerValueDescriptionForm: [
         {
           id: -1,
           name: '',
+          value: '',
           description: '',
           created_at: ''
         }
@@ -164,14 +191,15 @@ export default {
   },
   methods: {
     refresh() {
-      apiGetDomains()
+      apiGetHttpHeaderValueDescriptions()
       .then(
-        domains => {
+        items => {
           this.rows = [];
-          domains.forEach(({ id, name, description, updated_at }, index) => {
+          items.forEach(({ id, name, value, description, updated_at }, index) => {
             this.rows.push({
               id,
               name,
+              value,
               description,
               updated_at
             });
@@ -181,7 +209,7 @@ export default {
     },
     downloadCSV(event) {
       let fileName = null;
-      const result = apiDownloadDomains()
+      const result = apiDownloadHttpHeaderValueDescriptions()
         .then(response => {
           if (response.status === 200) {
             fileName = response.headers.get("Content-Disposition");
@@ -196,7 +224,7 @@ export default {
           var fileURL = window.URL.createObjectURL(new Blob([blob], {type: 'text/csv;charset=utf-8;'}));
           var fileLink = document.createElement('a');
           fileLink.href = fileURL;
-          fileLink.setAttribute('download', fileName || `domains.csv`);
+          fileLink.setAttribute('download', fileName || `http_header_value_descriptions.csv`);
           document.body.appendChild(fileLink);
           fileLink.click();
           fileLink.remove();
@@ -211,7 +239,7 @@ export default {
       formData.append('file', this.file);
       formData.append('fileName', this.file.name)
       const that = this;
-      apiUploadDomains(formData)
+      apiUploadHttpHeaderValueDescriptions(formData)
       .then(function() {
         that.refresh();
       })
@@ -222,11 +250,11 @@ export default {
     handleFileUpload() {
       this.file = this.$refs.file.files[0];
     },
-    addDomain() {
-      const { name, description } = this.domainForm;
+    addHeader() {
+      const { name, value, description } = this.headerValueDescriptionForm;
       const that = this;
       if (name) {
-        apiAddDomain({name, description})
+        apiAddHttpHeaderValueDescription({name, value, description})
         .then(res => {
           that.$bvModal.hide('modal-add');
           that.refresh();
@@ -236,25 +264,26 @@ export default {
         });
       }
     },
-    editDomain(id) {
+    editHeader(id) {
       if (id === -1) {
-        this.domainForm = [{
+        this.headerValueDescriptionForm = [{
           id: -1,
           name: '',
+          value: '',
           description: '',
           created_at: ''
         }];
       } else {
-        const data = this.rows.find( domain => domain.id === id);
-        this.domainForm = data;
+        const data = this.rows.find( item => item.id === id);
+        this.headerValueDescriptionForm = data;
       }
     },
-    saveDomain() {
+    saveHeader() {
       const that = this;
-      const { name, description } = this.domainForm;
-      apiUpdateDomain(
-        this.domainForm.id,
-        { name, description }
+      const { name, description } = this.headerValueDescriptionForm;
+      apiUpdateHttpHeaderValueDescription(
+        this.headerValueDescriptionForm.id,
+        { name, value, description }
       )
       .then(res => {
         that.$bvModal.hide('modal-edit');
@@ -264,9 +293,9 @@ export default {
         console.log('===== error: ', error);
       });
     },
-    removeDomain(id) {
+    removeHeader(id) {
       const that = this;
-      apiDeleteDomain(id)
+      apiDeleteHttpHeaderValueDescription(id)
       .then(res => {
         that.refresh();
       })
