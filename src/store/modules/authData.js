@@ -1,7 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-import { loginWithAPI } from "@/api/apis";
-import {logoutWithAPI } from "@/api/apis"
+import { loginWithAPI, logoutWithAPI } from "@/api/auth";
 export default {
   state: {
     loggedInUser:

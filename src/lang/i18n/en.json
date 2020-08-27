@@ -9,6 +9,8 @@
   },
   "domains": "Domains",
   "all-domains": "All Domains",
+  "all-http-header-descriptions": "All HTTP Header Descriptions",
+  "all-http-header-value-descriptions": "All HTTP Header Value Descriptions",
   "create-domain": "Create Domain",
   "domain-details": "Domain Details",
   "projects": "Projects",

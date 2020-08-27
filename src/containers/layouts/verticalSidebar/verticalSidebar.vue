@@ -49,7 +49,19 @@
               <li>
                 <router-link tag="a" class to="/app/dashboards/dashboard.domains">
                   <i class="i-Circular-Point mr-2"></i>
-                  <span>Dashboard v1</span>
+                  <span>Domains</span>
+                </router-link>
+              </li>
+              <li>
+                <router-link tag="a" class to="/app/dashboards/dashboard.http-header-descriptions">
+                  <i class="i-Circular-Point mr-2"></i>
+                  <span>HTTP Header Descriptions</span>
+                </router-link>
+              </li>
+              <li>
+                <router-link tag="a" class to="/app/dashboards/dashboard.http-header-value-descriptions">
+                  <i class="i-Circular-Point mr-2"></i>
+                  <span>HTTP Header Value Descriptions</span>
                 </router-link>
               </li>
               <li>
