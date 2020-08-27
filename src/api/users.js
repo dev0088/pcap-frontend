@@ -14,3 +14,7 @@ export async function apiUserById(id) {
 export async function apiUpdateUser(id, data) {
   return await jsonQuery(`/auth/profile/${id}/`, 'PUT', data);
 }
+
+export async function apiUpdateUserPassword(id, data) {
+  return await jsonQuery(`/auth/profile/change_password/${id}/`, 'PUT', data);
+}
