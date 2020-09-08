@@ -22,6 +22,9 @@ import "vue2-daterange-picker/dist/vue2-daterange-picker.css";
 import "v2-datepicker/lib/index.css"; // v2 need to improt css
 import V2Datepicker from "v2-datepicker";
 
+import VueEditableGrid from 'vue-editable-grid'
+import 'vue-editable-grid/dist/VueEditableGrid.css'
+
 // locale.use(lang);
 
 export default {
@@ -83,6 +86,7 @@ export default {
 
     Vue.use(VueGoodTablePlugin);
 
+    Vue.component("vue-editable-grid", VueEditableGrid);
     // import VueCropper from "./plugins/imageCropper";
 
     // Use v-calendar & v-date-picker components

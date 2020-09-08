@@ -4,6 +4,13 @@
 <p> Please change url of backend API in `restApiSettings` variable in `/src/data/cofnig.js` file.
 </p>
 
+
+##Add this API parametres to .env files. 
+
+```
+VUE_APP_API_BASE_URL=http://localhost:8000/api/v1
+```
+
 ## Project setup
 
 ```

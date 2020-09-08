@@ -46,6 +46,16 @@
                   required
                 ></b-form-input>
               </b-form-group>
+
+              <b-form-group id="input-group-1" label-for="input-1">
+                <b-form-input
+                  id="input-1"
+                  type="text"
+                  v-model="headerValueDescriptionForm.color"
+                  placeholder="header color..."
+                  required
+                ></b-form-input>
+              </b-form-group>              
               
               <b-form-group>
                 <b-form-textarea
@@ -167,6 +177,12 @@ export default {
           tdClass: "text-left"
         },
         {
+          label: "Color",
+          field: "color",
+          thClass: "text-left",
+          tdClass: "text-left"
+        },        
+        {
           label: "Actions",
           field: "button",
           html: true,
@@ -180,11 +196,12 @@ export default {
         {
           id: -1,
           name: '',
-          value: '',
+          value: '*',
           description: '',
-          created_at: ''
+          created_at: '',
+          color: 'None'
         }
-      ],      
+      ]
     };
     this.refresh();    
     return res;
@@ -266,13 +283,14 @@ export default {
     },
     editHeader(id) {
       if (id === -1) {
-        this.headerValueDescriptionForm = [{
+        this.headerValueDescriptionForm = {
           id: -1,
           name: '',
-          value: '',
+          value: '*',
           description: '',
-          created_at: ''
-        }];
+          created_at: '',
+          color: 'None'
+        };
       } else {
         const data = this.rows.find( item => item.id === id);
         this.headerValueDescriptionForm = data;

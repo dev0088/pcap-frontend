@@ -199,14 +199,14 @@
               }}</span>
             </router-link>
           </li>
-          <li class="nav-item">
+          <!--<li class="nav-item">
             <router-link tag="a" class to="/app/dashboards/dashboard.http-header-descriptions">
               <i class="nav-icon i-Windows-2"></i>
               <span class="item-name">{{
                 $t("all-http-header-descriptions")
               }}</span>
             </router-link>
-          </li>
+          </li>-->
            <li class="nav-item">
             <router-link tag="a" class to="/app/dashboards/dashboard.http-header-value-descriptions">
               <i class="nav-icon i-Windows-2"></i>

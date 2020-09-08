@@ -46,23 +46,23 @@
           </b-row>                
         </b-modal>            
         <b-card title="Interpretation" class="text-left ">
-          <vue-good-table
-            :columns="columns"
-            :pagination-options="{
-              enabled: true,
-              mode: 'records'
-            }"
-            styleClass="tableOne vgt-table"
-            :rows="rows"
+          <vue-editable-grid
+            class="grid"
+            ref="grid"
+            id="mygrid"
+            :column-defs="columnDefs"
+            :row-data="rowDatas"
+            row-data-key='interpretationId'
+            @cell-updated="cellUpdated"
+            @row-selected="rowSelected"
           >
-            <template slot="table-row" slot-scope="props">
-              <span v-if="props.column.field == 'actions'">
-                <b-button variant="danger m-1" @click="deleteFromArchive">Delete</b-button>
-                <b-button variant="light m-1" @click="deleteFromArchive">Remove</b-button>
-                <b-button variant="primary ripple m-1">Download</b-button>
-              </span>
+            <template v-slot:header>
+              Interpretation Datas
             </template>
-          </vue-good-table>
+            <template v-slot:header-r>
+              Total rows: {{ rowDatas.length }}
+            </template>
+          </vue-editable-grid>
 
           <b-button variant="primary ripple m-1 add-button-i add-button-interpretation" v-b-modal.modal-1>Add New</b-button>
         </b-card>
@@ -87,39 +87,53 @@ export default {
   },
   data() {
     return {
-      columns: [
-        {
-          label: "Id",
-          field: "id",
-        },
-        {
-          label: "Application",
-          field: "app"
-        },        
-        {
-          label: "Context",
-          field: "context"
-        },
-        {
-          label: "Pattern",
-          field: "pattern"
-        },
-        {
-          label: "Description",
-          field: "description"
-        }        
+      columnDefs: [
+        { sortable: true, filter: true, field: 'Context', headerName: 'Context', editable: true },
+        { sortable: true, filter: true, field: 'Type', headerName: 'Type', editable: true },
+        { sortable: true, filter: true, field: 'Expression', headerName: 'Expression', editable: true },
+        { sortable: true, filter: true, field: 'Description', headerName: 'Description',  editable: true },
+        { sortable: true, filter: true, field: 'Color', headerName: 'Color',  editable: true }
       ],
-      rows: [
+      rowDatas: [
         {
-          id: 1,
-          app: 'http',
-          context: 'www.facebook.com',
-          pattern: 'Content-Length',
-          description: 'Description'
-        }                                               
+          Context: 'Context',
+          Type: 'Type',
+          Expression: 'Expression',
+          Description: '',
+          Color: 'None'
+        },
+        {
+          Context: 'Context',
+          Type: 'Type',
+          Expression: 'Expression',
+          Description: '',
+          Color: 'None'
+        },
+        {
+          Context: 'Context',
+          Type: 'Type',
+          Expression: 'Expression',
+          Description: '',
+          Color: 'None'
+        },
+        {
+          Context: 'Context',
+          Type: 'Type',
+          Expression: 'Expression',
+          Description: '',
+          Color: 'None'
+        }                                
       ]
     };
-  }  
+  },
+  methods: {
+    cellUpdated(event) {
+      
+    },
+    rowSelected() {
+      
+    },    
+  }    
 };
 </script>
 <style>
@@ -128,5 +142,8 @@ export default {
 }
 .mb-30 {
   margin-top: unset!important;
+}
+.grid {
+  height: 400px;
 }
 </style>

@@ -54,7 +54,7 @@
           <b-row>      
             <b-form-group
               class="col-md-6 mb-3"
-              label="Current Paswordd"
+              label="Current Pasword"
             >
               <b-form-input
                 type="password"

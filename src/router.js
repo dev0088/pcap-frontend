@@ -78,7 +78,15 @@ const routes = [
           {
             path: "interpretation",
             component: () => import("./views/app/projects/interpretation")
-          }          
+          },
+          {
+            path: "scenario",
+            component: () => import("./views/app/projects/scenario")
+          },
+          {
+            path: "add-senario",
+            component: () => import("./views/app/projects/add-senario")
+          }                              
         ]
       },
       {
@@ -469,7 +477,7 @@ const routes = [
 
       // chart_componnent//////////----------------------////////////////////////
 
-      {
+      /*{
         path: "/app/charts",
         component: () => import("./views/app/chart"),
         redirect: "/app/charts/eChart",
@@ -524,7 +532,7 @@ const routes = [
             component: () => import("./views/app/chart/apexSparklineChart")
           }
         ]
-      }
+      }*/
     ]
   },
   // sessions
